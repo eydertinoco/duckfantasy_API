@@ -24,14 +24,10 @@ export class UsuarioRepository {
         });
         const result = await newUser.save();
         console.log(result);
-        return 'prodID';
+        return result.id;
     }
 
-    async salvar(usuario) {
-        this.usuarios.push(usuario);
-    }
-
-    async listar() {
+    async getUser() {
         return this.usuarios;
     }
 }
