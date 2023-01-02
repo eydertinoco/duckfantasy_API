@@ -23,7 +23,13 @@ export class UsuarioController {
     }
 
     @Get()
-    getAllUser() {
-        return this.usuarioRepository.getUser();
+    async getAllUser() {
+        const usuarios = await this.usuarioRepository.getUser();
+        return usuarios;
+    }
+
+    @Get(':id')
+    getUser(@Param('id') userId: string) {
+        return this.usuarioRepository.getSingleUser(userId);
     }
 }

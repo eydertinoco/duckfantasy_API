@@ -24,10 +24,16 @@ export class UsuarioRepository {
         });
         const result = await newUser.save();
         console.log(result);
-        return result.id;
+        return result.id as string;
     }
 
     async getUser() {
-        return this.usuarios;
+        const usuarios = await this.usuarioModel.find().exec();
+        return usuarios as Usuario[];
+    }
+
+    getSingleUser(userId: string) {
+        // const user = this.findUser(userId) [0];
+        // return {...user};
     }
 }
