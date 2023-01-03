@@ -32,4 +32,17 @@ export class UsuarioController {
     getUser(@Param('id') userId: string) {
         return this.usuarioRepository.getSingleUser(userId);
     }
+
+    @Patch(':id')
+    updateUser(
+        @Param('id') userId: string,
+        @Body('user') userUser: string,
+        @Body('password') userPassword: string,
+        @Body('email') userEmail: string,
+        @Body('firstName') userFirstName: string,
+        @Body('lastName') userLastName: string
+    ) {
+
+    }
+
 }

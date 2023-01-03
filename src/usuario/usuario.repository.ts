@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 
@@ -29,11 +29,40 @@ export class UsuarioRepository {
 
     async getUser() {
         const usuarios = await this.usuarioModel.find().exec();
-        return usuarios as Usuario[];
+        return usuarios.map((user) => ({
+            id: user.id,
+            user: user.user,
+            password: user.password,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+        }));
     }
 
-    getSingleUser(userId: string) {
-        // const user = this.findUser(userId) [0];
-        // return {...user};
+    async getSingleUser(userId: string) {
+        const user = await this.findUser(userId);
+        return user;
+    }
+
+    async deleteUser(userId: string) {
+        const user = await this.findUser(userId)[1];
+        this.usuarios.splice(user, 1);
+    }
+
+    private async findUser(id: string): Promise<Usuario> {
+        let user;
+        try {
+            user = await this.usuarioModel.findById(id);
+        } catch (error) {
+            throw new NotFoundException('Não é possivel encontrar esse usuário!')
+      }
+      return {
+          id: user.id,
+          user: user.user,
+          password: user.password,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName
+      };
     }
 }
