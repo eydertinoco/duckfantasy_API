@@ -41,28 +41,37 @@ export class UsuarioRepository {
 
     async getSingleUser(userId: string) {
         const user = await this.findUser(userId);
-        return user;
+        return {
+            id: user.id,
+            user: user.user,
+            password: user.password,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+        };
+    }
+
+    async updateUser(userId: string, user: string, password: string, email: string, firstName: string, lastName: string) {
+        const updatedUser = await this.findUser(userId);
+        if(user) {updatedUser.user = user;}
+        if(password) {updatedUser.password = password;}
+        if(email) {updatedUser.email = email;}
+        if(firstName) {updatedUser.firstName = firstName;}
+        if(lastName) {updatedUser.lastName = lastName;}
+        updatedUser.save();
     }
 
     async deleteUser(userId: string) {
-        const user = await this.findUser(userId)[1];
-        this.usuarios.splice(user, 1);
+        await this.usuarioModel.deleteOne({_id: userId}).exec();
     }
 
     private async findUser(id: string): Promise<Usuario> {
         let user;
         try {
-            user = await this.usuarioModel.findById(id);
+            user = await this.usuarioModel.findById(id).exec();
         } catch (error) {
             throw new NotFoundException('Não é possivel encontrar esse usuário!')
       }
-      return {
-          id: user.id,
-          user: user.user,
-          password: user.password,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName
-      };
+      return user;
     }
 }

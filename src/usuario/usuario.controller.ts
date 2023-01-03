@@ -34,7 +34,7 @@ export class UsuarioController {
     }
 
     @Patch(':id')
-    updateUser(
+    async updateUser(
         @Param('id') userId: string,
         @Body('user') userUser: string,
         @Body('password') userPassword: string,
@@ -42,7 +42,13 @@ export class UsuarioController {
         @Body('firstName') userFirstName: string,
         @Body('lastName') userLastName: string
     ) {
-
+        await this.usuarioRepository.updateUser(userId, userUser, userPassword, userEmail, userFirstName, userLastName);
+        return null;
     }
 
+    @Delete(':id')
+    async removeUser(@Param('id') userId: string) {
+        await this.usuarioRepository.deleteUser(userId);
+        return null
+    }
 }
