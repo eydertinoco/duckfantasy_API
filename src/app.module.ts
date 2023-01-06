@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import {UsuarioModule} from "./usuario/usuario.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
   imports: [
-    UsuarioModule,
+    UserModule,
     MongooseModule.forRoot(
         'mongodb+srv://eyder:QPGbt4JrO396a8MN@cluster0.shl0ci5.mongodb.net/nestjs-demo?retryWrites=true&w=majority'
     )
