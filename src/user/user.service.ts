@@ -25,7 +25,7 @@ export class UserService {
         return result.id as string;
     }
 
-    async getUser() {
+    async getAll() {
         const users = await this.userModel.find().exec();
         return users.map((user) => ({
             id: user.id,
@@ -35,8 +35,18 @@ export class UserService {
         }));
     }
 
-    async getSingleUser(id: string) {
+    async getById(id: string) {
         const user = await this.findUser(id);
+        return {
+            id: user.id,
+            email: user.email,
+            password: user.password,
+            name: user.name
+        };
+    }
+
+    async getByEmail(email: string) {
+        const user = await this.userModel.findOne({ email: email }).exec();
         return {
             id: user.id,
             email: user.email,
