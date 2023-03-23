@@ -1,16 +1,31 @@
 import * as mongoose from "mongoose";
 export const ClassSchema = new mongoose.Schema({
     className: { type: String, required: true },
-    teacherName: { type: String, required: true },
+    teacherName: { type: Array, required: true },
     completionDate: { type: String, required: true },
-    listTrail: { type: String, required: false },
-    listStudent: { type: String, required: false }
+    listTrail: { type: Array, required: false },
+    listStudent: { type: Array, required: false }
 });
 export interface Class extends mongoose.Document{
     id: string;
     className: string;
-    teacherName: string;
+    teacher: [
+        {
+            teacherId: string;
+            teacherName: string,
+        }
+    ];
     completionDate: string;
-    listTrail: [];
-    listStudent: [];
+    listTrail: [
+        {
+            trailId: string;
+            trailName: string,
+        }
+    ];
+    listStudent: [
+        {
+            studentId: string,
+            studentName: string,
+        }
+    ];
 }
