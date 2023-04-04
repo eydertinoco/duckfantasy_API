@@ -2,7 +2,9 @@ import {Injectable, NotFoundException} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 
+import { UserController } from "../user/user.controller";
 import { Class } from "./class.model";
+import {User} from "../user/user.model";
 
 
 @Injectable()
@@ -10,8 +12,7 @@ export class ClassService {
     private classes: Class[] = [];
 
     constructor(
-        @InjectModel('Class') private readonly classModel:
-            Model<Class>
+        @InjectModel('Class') private readonly classModel: Model<Class>
     ) {}
 
     async createClass(className: string, completionDate: string) {
@@ -27,7 +28,7 @@ export class ClassService {
         return result.id as string;
     }
 
-    async getAllMyClass() {
+    async getAllClass() {
         const myClasses = await this.classModel.find().exec();
         return myClasses.map((myClass) => ({
             id: myClass.id,
@@ -37,5 +38,34 @@ export class ClassService {
             listTrail: myClass.listTrail,
             listStudent: myClass.listStudent,
         }));
+    }
+
+    private async findClass(id: string): Promise<Class> {
+        let class1;
+        try {
+            class1 = await this.classModel.findById(id).exec();
+        } catch (error) {
+            throw new NotFoundException('Não é possivel encontrar essa Classe!')
+        }
+        return class1;
+    }
+
+    async getAllStudentInClass(id: string) {
+        const class1 = await this.findClass(id);
+        return {
+            id: class1.id,
+            className: class1.className,
+            teacher: class1.teacher,
+            listStudent: class1.listStudent,
+        };
+    }
+    async getAllTrailInClass(id: string) {
+        const class1 = await this.findClass(id);
+        return {
+            id: class1.id,
+            className: class1.className,
+            teacher: class1.teacher,
+            listTrail: class1.listTrail
+        };
     }
 }

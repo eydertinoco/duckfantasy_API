@@ -58,6 +58,17 @@ export class UserService {
         };
     }
 
+    async getAllStudent() {
+        const user = await this.userModel.findOne({ office: 'Estudante' }).exec();
+        return {
+            id: user.id,
+            email: user.email,
+            password: user.password,
+            name: user.name,
+            office: user.office
+        };
+    }
+
     async updateUser(id: string, email: string, password: string, name: string, office: string) {
         const updatedUser = await this.findUser(id);
         if(email) {updatedUser.email = email;}

@@ -34,6 +34,11 @@ export class UserController {
         return this.userService.getById(userId);
     }
 
+    @Get()
+    getAllStudent() {
+        return this.userService.getAllStudent();
+    }
+
     @UseGuards(JwtAuthGuard)
     @Patch(':id')
     async updateUser(

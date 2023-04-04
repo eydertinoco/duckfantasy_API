@@ -19,10 +19,13 @@ export class ClassController {
         return { id: generatedId, status: 'Classe Cadastrada'};
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
-    async getAllMyClass() {
-        const classes = await this.classService.getAllMyClass();
+    async getAllClass() {
+        const classes = await this.classService.getAllClass();
         return classes;
     }
+
+
 
 }

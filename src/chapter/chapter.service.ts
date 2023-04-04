@@ -16,7 +16,7 @@ export class ChapterService {
 
     async createChapter(title: string, text: string, ref: string) {
         // Pegar id da trilha
-        //Pegar id do professor online
+        //Pegar id do professor
         const newChapter = new this.chapterModel({
             chapterTitle: title,
             chapterText: text,
