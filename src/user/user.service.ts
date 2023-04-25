@@ -3,7 +3,13 @@ import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 
 import { User } from "./user.model";
-
+export interface userType {
+    id: string;
+    email: string;
+    name: string;
+    password: string;
+    office: string;
+}
 
 @Injectable()
 export class UserService {
@@ -36,7 +42,7 @@ export class UserService {
         }));
     }
 
-    async getById(id: string) {
+    async getById(id: string): Promise<userType> {
         const user = await this.findUser(id);
         return {
             id: user.id,

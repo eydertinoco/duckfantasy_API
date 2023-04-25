@@ -3,6 +3,8 @@ import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 
 import { Chapter } from "./chapter.model";
+import {TrailService} from "../trail/trail.service";
+import {UserService} from "../user/user.service";
 
 
 @Injectable()
@@ -10,13 +12,12 @@ export class ChapterService {
     private chapters: Chapter[] = [];
 
     constructor(
-        @InjectModel('Chapter') private readonly chapterModel:
-            Model<Chapter>
+        @InjectModel('Chapter')
+        private readonly chapterModel: Model<Chapter>,
+        private readonly trailService: TrailService
     ) {}
 
     async createChapter(title: string, text: string, ref: string) {
-        // Pegar id da trilha
-        //Pegar id do professor
         const newChapter = new this.chapterModel({
             chapterTitle: title,
             chapterText: text,
@@ -24,17 +25,6 @@ export class ChapterService {
         });
         const result = await newChapter.save();
         return result.id as string;
-    }
-
-    async getAllChapterInTrail(idTrail: string) {
-        // Pegar id do Trail
-        // pegar a Lista de Chapter dentro do Trail
-        // Vai chamar todos da lista
-        const chapter = await this.findChapter(idTrail);
-        return {
-            id: chapter.id,
-            chapterTitle: chapter.chapterTitle,
-        };
     }
 
     async getAllInfoChapter(id: string) {

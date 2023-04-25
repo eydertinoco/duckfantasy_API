@@ -9,9 +9,8 @@ export interface Trail extends mongoose.Document{
     id: string;
     trailName: string;
     trailDescription: string;
-    teacher: string;
+    teacherId: string;
     listChapter: [
-        chapterId: string,
-        chapterTitle: string,
+        chapterId: string
     ];
 }

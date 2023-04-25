@@ -2,38 +2,51 @@ import {Injectable, NotFoundException} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 
-import { UserController } from "../user/user.controller";
-import { Class } from "./class.model";
-import {User} from "../user/user.model";
+import { Class } from "./turma.model";
+import {UserService} from "../user/user.service";
+
+import {userType} from "../user/user.service";
 
 
 @Injectable()
-export class ClassService {
+export class TurmaService {
     private classes: Class[] = [];
 
     constructor(
-        @InjectModel('Class') private readonly classModel: Model<Class>
+        @InjectModel('Class')
+        private readonly classModel: Model<Class>,
+        private readonly userService: UserService
     ) {}
 
     async createClass(className: string, completionDate: string) {
 
+        const teacher = await this.userService.getById('640719f790d02f665e6f6edf');
+
         const newClass = new this.classModel({
             className: className,
-            teacher: [['213', 'Roberta']],
+            teacherId: teacher.id,
+            createdDate: new Date().toString().replace(/T/, ':').replace(/\.\w*/, ''),
             completionDate: completionDate,
-            listTrail: [['Aula 1'], ['Aula 2']],
-            listStudent: [['1','Eyder'], ['2','Eyder 2']],
+            listTrail: [],
+            listStudent: [],
         });
         const result = await newClass.save();
         return result.id as string;
     }
 
+    async myTeacherInfo(teacherId) {
+        const getTeacher = await this.userService.getById('teacherId');
+        return getTeacher.name;
+    }
+
     async getAllClass() {
         const myClasses = await this.classModel.find().exec();
+
         return myClasses.map((myClass) => ({
             id: myClass.id,
             className: myClass.className,
-            teacher: myClass.teacher,
+            teacherId: myClass.teacherId,
+            createdDate: myClass.createdDate,
             completionDate: myClass.completionDate,
             listTrail: myClass.listTrail,
             listStudent: myClass.listStudent,
@@ -55,7 +68,7 @@ export class ClassService {
         return {
             id: class1.id,
             className: class1.className,
-            teacher: class1.teacher,
+            teacher: class1.teacherId,
             listStudent: class1.listStudent,
         };
     }
@@ -64,8 +77,12 @@ export class ClassService {
         return {
             id: class1.id,
             className: class1.className,
-            teacher: class1.teacher,
+            teacher: class1.teacherId,
             listTrail: class1.listTrail
         };
+    }
+
+    async deleteTurma(id: string) {
+        await this.classModel.deleteOne({_id: id}).exec();
     }
 }
