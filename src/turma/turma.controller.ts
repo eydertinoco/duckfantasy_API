@@ -1,6 +1,7 @@
-import {Body, Controller, Get, Post, Param, Patch, Delete, UseGuards} from "@nestjs/common";
+import {Body, Controller, Get, Post, Param, Request, Patch, Delete, UseGuards} from "@nestjs/common";
 import {TurmaService} from "./turma.service";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {NewTurmaDto} from "./dto/NewTurma.dto";
 
 @Controller('/turma')
 export class TurmaController {
@@ -9,27 +10,34 @@ export class TurmaController {
     @UseGuards(JwtAuthGuard)
     @Post()
     async createTurma(
-        @Body('className') className: string,
-        @Body('completionDate') completionDate: string,
+        @Body() createTurmaDto: NewTurmaDto,
+        @Request() req: any,
     ){
-        const generatedId = await this.turmaService.createClass(
-            className,
-            completionDate
-        );
-        return { id: generatedId, status: 'Classe Cadastrada'};
+        console.log(createTurmaDto);
+        if (req?.user.office === "Professor") {
+            const generatedId = await this.turmaService.criarNovaTurma(
+                req?.user.id,
+                createTurmaDto
+            );
+            return { id: generatedId, status: 'Turma Cadastrada'};
+        } else {
+            return { status: 'Você não é Professor para cadastrar Turmas'};
+        }
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getAllTurma() {
-        const classes = await this.turmaService.getAllClass();
-        return classes;
+    async getAllTurma(
+        @Request() req: any,
+    ) {
+        const turmas = await this.turmaService.getTodasMinhasTurmas(req?.user.id);
+        return turmas;
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(':id')
-    async removeUser(@Param('id') turmaId: string) {
-        await this.turmaService.deleteTurma(turmaId);
+    async removerTurma(@Param('id') turmaId: string) {
+        await this.turmaService.deletarTurma(turmaId);
         return null
     }
 

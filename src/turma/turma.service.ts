@@ -6,6 +6,7 @@ import { Class } from "./turma.model";
 import {UserService} from "../user/user.service";
 
 import {userType} from "../user/user.service";
+import {NewTurmaDto} from "./dto/NewTurma.dto";
 
 
 @Injectable()
@@ -18,38 +19,29 @@ export class TurmaService {
         private readonly userService: UserService
     ) {}
 
-    async createClass(className: string, completionDate: string) {
-
-        const teacher = await this.userService.getById('640719f790d02f665e6f6edf');
-
-        const newClass = new this.classModel({
-            className: className,
-            teacherId: teacher.id,
-            createdDate: new Date().toString().replace(/T/, ':').replace(/\.\w*/, ''),
-            completionDate: completionDate,
+    async criarNovaTurma(teacher: string, createTurmaDto: NewTurmaDto) {
+        const novaTurma = new this.classModel({
+            ...createTurmaDto,
+            teacherId: teacher,
             listTrail: [],
             listStudent: [],
         });
-        const result = await newClass.save();
+        const result = await novaTurma.save();
         return result.id as string;
     }
 
-    async myTeacherInfo(teacherId) {
-        const getTeacher = await this.userService.getById('teacherId');
-        return getTeacher.name;
-    }
+    async getTodasMinhasTurmas(userId) {
+        const todasTurmas = await this.classModel.find().exec();
 
-    async getAllClass() {
-        const myClasses = await this.classModel.find().exec();
 
-        return myClasses.map((myClass) => ({
-            id: myClass.id,
-            className: myClass.className,
-            teacherId: myClass.teacherId,
-            createdDate: myClass.createdDate,
-            completionDate: myClass.completionDate,
-            listTrail: myClass.listTrail,
-            listStudent: myClass.listStudent,
+        return todasTurmas.map((minhaTurma) => ({
+            id: minhaTurma.id,
+            className: minhaTurma.className,
+            teacherId: minhaTurma.teacherId,
+            createdDate: minhaTurma.createdDate,
+            completionDate: minhaTurma.completionDate,
+            listTrail: minhaTurma.listTrail,
+            listStudent: minhaTurma.listStudent,
         }));
     }
 
@@ -82,7 +74,7 @@ export class TurmaService {
         };
     }
 
-    async deleteTurma(id: string) {
+    async deletarTurma(id: string) {
         await this.classModel.deleteOne({_id: id}).exec();
     }
 }

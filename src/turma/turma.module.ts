@@ -10,8 +10,9 @@ import {UserController} from "../user/user.controller";
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{name: 'Class', schema: ClassSchema},
-            { name: 'User', schema: UserSchema}
+        MongooseModule.forFeature([
+            { name: 'Class', schema: ClassSchema },
+            { name: 'User', schema: UserSchema }
         ])
     ],
     controllers: [TurmaController],
