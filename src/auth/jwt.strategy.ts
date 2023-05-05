@@ -5,8 +5,10 @@ import {jwtConstants} from './constants';
 
 export interface JWTPayloadRequest extends Request {
     user: {
+        id: string;
         email: string;
         name: string;
+        office: string;
     }
 }
 
@@ -21,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        return {email: payload.email, name: payload.name}
+        return {id: payload.id, email: payload.email, name: payload.name, office: payload.office}
     }
 }
