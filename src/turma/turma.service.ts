@@ -33,8 +33,15 @@ export class TurmaService {
     async getTodasMinhasTurmas(userId) {
         const todasTurmas = await this.classModel.find().exec();
 
+        const numeroTodasTurmas = todasTurmas.length;
+        let minhasTurmas = [];
+        for(let i=0; i < numeroTodasTurmas; i++) {
+            if (userId === todasTurmas[i].teacherId) {
+                minhasTurmas.push(todasTurmas[i]);
+            }
+        }
 
-        return todasTurmas.map((minhaTurma) => ({
+        return minhasTurmas.map((minhaTurma) => ({
             id: minhaTurma.id,
             className: minhaTurma.className,
             teacherId: minhaTurma.teacherId,
