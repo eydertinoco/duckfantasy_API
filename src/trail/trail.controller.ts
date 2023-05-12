@@ -1,6 +1,8 @@
-import {Body, Controller, Get, Post, Param, Patch, Delete, UseGuards} from "@nestjs/common";
+import {Body, Controller, Get, Post, Param, Patch, Delete, UseGuards, Request} from "@nestjs/common";
 import {TrailService} from "./trail.service";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {NewTurmaDto} from "../turma/dto/NewTurma.dto";
+import {NewTrailDto} from "./dto/NewTrail.dto";
 
 @Controller('/trial')
 export class TrailController {
@@ -9,21 +11,32 @@ export class TrailController {
     @UseGuards(JwtAuthGuard)
     @Post()
     async createTrial(
-        @Body('trailName') trailName: string,
-        @Body('trailDescription') trailDescription: string,
+        @Body() createTrialDto: NewTrailDto,
+        @Request() req: any,
     ){
+        console.log('Chegou aqui')
         const generatedId = await this.trailService.createTrail(
-            trailName,
-            trailDescription
+            req?.user.id,
+            createTrialDto
         );
         return { id: generatedId, status: 'Trilha Cadastrada'};
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getAllTurma() {
-        const trial = await this.trailService.getAllTrail();
-        return trial;
+    async getTodasMinhasTrilhas(
+        @Request() req: any,
+    ) {
+        const trilhas = await this.trailService.getTodasMinhasTrilhas(req?.user.id);
+        return trilhas;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    async getTrilhaId(
+        @Param('id') trilhaId: string
+    ) {
+        return this.trailService.getTrilhaId(trilhaId);
     }
 
     @UseGuards(JwtAuthGuard)

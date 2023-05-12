@@ -2,8 +2,8 @@ import * as mongoose from "mongoose";
 export const TrailSchema = new mongoose.Schema({
     trailName: { type: String, required: true },
     trailDescription: { type: String, required: true },
-    teacher: { type: String, required: true },
-    listChapter: { type: String, required: false },
+    teacherId: { type: String, required: true },
+    listChapter: { type: Array, required: false },
 });
 export interface Trail extends mongoose.Document{
     id: string;
@@ -11,6 +11,8 @@ export interface Trail extends mongoose.Document{
     trailDescription: string;
     teacherId: string;
     listChapter: [
-        chapterId: string
+        {
+            chapterId: string
+        }
     ];
 }

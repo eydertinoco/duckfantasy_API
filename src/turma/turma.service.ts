@@ -7,7 +7,15 @@ import {UserService} from "../user/user.service";
 
 import {userType} from "../user/user.service";
 import {NewTurmaDto} from "./dto/NewTurma.dto";
+import {User} from "../user/user.model";
 
+export interface turmaType {
+    id: string,
+    className: string,
+    teacherId: string,
+    createdDate: string,
+    completionDate: string,
+}
 
 @Injectable()
 export class TurmaService {
@@ -40,7 +48,6 @@ export class TurmaService {
                 minhasTurmas.push(todasTurmas[i]);
             }
         }
-
         return minhasTurmas.map((minhaTurma) => ({
             id: minhaTurma.id,
             className: minhaTurma.className,
@@ -50,6 +57,27 @@ export class TurmaService {
             listTrail: minhaTurma.listTrail,
             listStudent: minhaTurma.listStudent,
         }));
+    }
+
+    async getTurmaId(id: string): Promise<turmaType> {
+        const turma = await this.encontrarTurma(id);
+        return {
+            id: turma.id,
+            className: turma.className,
+            teacherId: turma.teacherId,
+            createdDate: turma.createdDate,
+            completionDate: turma.completionDate
+        };
+    }
+
+    private async encontrarTurma(id: string): Promise<Class> {
+        let turma;
+        try {
+            turma = await this.classModel.findById(id).exec();
+        } catch (error) {
+            throw new NotFoundException('Não é possivel encontrar essa turma!')
+        }
+        return turma;
     }
 
     private async findClass(id: string): Promise<Class> {
