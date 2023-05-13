@@ -70,6 +70,14 @@ export class TurmaService {
         };
     }
 
+    async updateTurma(id: string, createTurmaDto: NewTurmaDto) {
+        const updatedTurma = await this.encontrarTurma(id);
+        if(createTurmaDto) {updatedTurma.className = createTurmaDto.className;}
+        if(createTurmaDto) {updatedTurma.createdDate = createTurmaDto.createdDate;}
+        if(createTurmaDto) {updatedTurma.completionDate = createTurmaDto.completionDate;}
+        updatedTurma.save();
+    }
+
     private async encontrarTurma(id: string): Promise<Class> {
         let turma;
         try {

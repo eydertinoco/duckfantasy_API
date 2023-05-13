@@ -43,6 +43,17 @@ export class TurmaController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Patch(':id')
+    async updateTurma(
+        @Param('id') turmaId: string,
+        @Body() createTurmaDto: NewTurmaDto,
+        @Request() req: any,
+    ) {
+        await this.turmaService.updateTurma(turmaId, createTurmaDto);
+        return null;
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async removerTurma(@Param('id') turmaId: string) {
         await this.turmaService.deletarTurma(turmaId);
