@@ -4,8 +4,17 @@ import {Model} from "mongoose";
 
 import { Chapter } from "./chapter.model";
 import {TrailService} from "../trail/trail.service";
-import {UserService} from "../user/user.service";
+import {NewChapterDto} from "./dto/NewChapter.dto";
+import {turmaType} from "../turma/turma.service";
+import {Class} from "../turma/turma.model";
 
+export interface chapterType {
+    id: string,
+    chapterTitle: string,
+    chapterText: string,
+    trialId: string,
+    chapterRef: string
+}
 
 @Injectable()
 export class ChapterService {
@@ -17,45 +26,32 @@ export class ChapterService {
         private readonly trailService: TrailService
     ) {}
 
-    async createChapter(title: string, text: string, ref: string) {
+    async createChapter(createChapterDto: NewChapterDto) {
         const newChapter = new this.chapterModel({
-            chapterTitle: title,
-            chapterText: text,
-            chapterRef: ref
+            ...createChapterDto
         });
         const result = await newChapter.save();
         return result.id as string;
     }
 
-    async getAllInfoChapter(id: string) {
-        const chapter = await this.findChapter(id);
+    async getChapterId(id: string): Promise<chapterType> {
+        const chapter = await this.encontrarCapitulo(id);
         return {
             id: chapter.id,
             chapterTitle: chapter.chapterTitle,
             chapterText: chapter.chapterText,
-            chapterRef: chapter.chapterRef,
+            trialId: chapter.trialId,
+            chapterRef: chapter.chapterRef
         };
     }
 
-    async updateChapter(id: string, title: string, text: string, ref: string) {
-        const updatedChapter = await this.findChapter(id);
-        if(title) {updatedChapter.chapterTitle = title;}
-        if(text) {updatedChapter.chapterText = text;}
-        if(ref) {updatedChapter.chapterRef = ref;}
-        updatedChapter.save();
-    }
-
-    async deleteChapter(id: string) {
-        await this.chapterModel.deleteOne({_id: id}).exec();
-    }
-
-    private async findChapter(id: string): Promise<Chapter> {
+    private async encontrarCapitulo(id: string): Promise<Chapter> {
         let chapter;
         try {
             chapter = await this.chapterModel.findById(id).exec();
         } catch (error) {
-            throw new NotFoundException('Não é possivel encontrar esse usuário!')
-      }
-      return chapter;
+            throw new NotFoundException('Não é possivel encontrar esse capítulo!')
+        }
+        return chapter;
     }
 }

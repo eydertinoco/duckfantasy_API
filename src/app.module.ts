@@ -20,6 +20,7 @@ const DB_PASSWORD = encodeURIComponent(process.env.DB_PASSWORD);
     UserModule,
     TurmaModule,
     TrailModule,
+    ChapterModule,
     AuthModule
   ],
   controllers: [],

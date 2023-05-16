@@ -6,15 +6,19 @@ import {ChapterService} from "./chapter.service";
 import {ChapterSchema} from "./chapter.model";
 import {TrailSchema} from "../trail/trail.model";
 import {TrailService} from "../trail/trail.service";
+import {UserSchema} from "../user/user.model";
+import {UserService} from "../user/user.service";
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{name: 'Chapter', schema: ChapterSchema},
-            { name: 'Trail', schema: TrailSchema}
+        MongooseModule.forFeature([
+            {name: 'Chapter', schema: ChapterSchema},
+            { name: 'Trail', schema: TrailSchema},
+            { name: 'User', schema: UserSchema}
         ])
     ],
     controllers: [ChapterController],
-    providers: [ChapterService, TrailService],
+    providers: [ChapterService, TrailService, UserService],
     exports: [ChapterService],
 })
 

@@ -68,6 +68,12 @@ export class TrailService {
         };
     }
 
+    async vincularCapituloComTrilha(id: string, chapterId) {
+        const updatedTrilha = await this.encontrarTrilha(id);
+        if(chapterId) {updatedTrilha.listChapter.push(chapterId); }
+        updatedTrilha.save();
+    }
+
     async deleteTrial(id: string) {
         await this.trailModel.deleteOne({_id: id}).exec();
     }
