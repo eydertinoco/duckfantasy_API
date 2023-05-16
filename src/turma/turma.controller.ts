@@ -46,10 +46,10 @@ export class TurmaController {
     @Patch(':id')
     async updateTurma(
         @Param('id') turmaId: string,
-        @Body() createTurmaDto: NewTurmaDto,
+        @Body() trailId: string,
         @Request() req: any,
     ) {
-        await this.turmaService.updateTurma(turmaId, createTurmaDto);
+        await this.turmaService.updateTurma(turmaId, trailId);
         return null;
     }
 

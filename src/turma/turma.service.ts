@@ -15,6 +15,7 @@ export interface turmaType {
     teacherId: string,
     createdDate: string,
     completionDate: string,
+    listTrail: [{ trailId: string }],
 }
 
 @Injectable()
@@ -66,15 +67,14 @@ export class TurmaService {
             className: turma.className,
             teacherId: turma.teacherId,
             createdDate: turma.createdDate,
-            completionDate: turma.completionDate
+            completionDate: turma.completionDate,
+            listTrail: turma.listTrail
         };
     }
 
-    async updateTurma(id: string, createTurmaDto: NewTurmaDto) {
+    async updateTurma(id: string, trailId) {
         const updatedTurma = await this.encontrarTurma(id);
-        if(createTurmaDto) {updatedTurma.className = createTurmaDto.className;}
-        if(createTurmaDto) {updatedTurma.createdDate = createTurmaDto.createdDate;}
-        if(createTurmaDto) {updatedTurma.completionDate = createTurmaDto.completionDate;}
+        if(trailId) {updatedTurma.listTrail.push(trailId); }
         updatedTurma.save();
     }
 
