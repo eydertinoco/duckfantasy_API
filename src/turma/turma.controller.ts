@@ -26,12 +26,28 @@ export class TurmaController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get()
-    async getAllTurma(
+    @Get('/')
+    async getTodasTurma() {
+        const todasTurmas = await this.turmaService.getTodasTurmas();
+        return todasTurmas;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/professor')
+    async getMinhasTurmas(
         @Request() req: any,
     ) {
-        const turmas = await this.turmaService.getTodasMinhasTurmas(req?.user.id);
-        return turmas;
+        const turmasCriadasPeloProfessor = await this.turmaService.getTodasMinhasTurmas(req?.user.id);
+        return turmasCriadasPeloProfessor;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/aluno')
+    async getTurmasVinculadas(
+        @Request() req: any,
+    ) {
+        const turmasQueAlunoPossui = await this.turmaService.getTodasTurmasVinculadas(req?.user.id);
+        return turmasQueAlunoPossui;
     }
 
     @UseGuards(JwtAuthGuard)
@@ -51,6 +67,26 @@ export class TurmaController {
     ) {
         await this.turmaService.updateTurma(turmaId, trailId);
         return null;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:id/aluno/vincular')
+    async vincularTurma(
+        @Param('id') turmaId: string,
+        @Request() req: any,
+    ) {
+        await this.turmaService.vincularAlunoTurma(turmaId, req?.user.id);
+        return null;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:id/aluno/desvincular')
+    async desvincularAlunoTurma(
+        @Param('id') turmaId: string,
+        @Request() req: any,
+    ) {
+        await this.turmaService.desvincularAlunoTurma(turmaId, req?.user.id);
+        return null
     }
 
     @UseGuards(JwtAuthGuard)

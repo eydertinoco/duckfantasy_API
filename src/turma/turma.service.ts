@@ -16,6 +16,7 @@ export interface turmaType {
     createdDate: string,
     completionDate: string,
     listTrail: [{ trailId: string }],
+    listStudent: [{ studentId: string }],
 }
 
 @Injectable()
@@ -39,6 +40,19 @@ export class TurmaService {
         return result.id as string;
     }
 
+    async getTodasTurmas() {
+        const todasTurmas = await this.classModel.find().exec();
+        return todasTurmas.map((minhaTurma) => ({
+            id: minhaTurma.id,
+            className: minhaTurma.className,
+            teacherId: minhaTurma.teacherId,
+            createdDate: minhaTurma.createdDate,
+            completionDate: minhaTurma.completionDate,
+            listTrail: minhaTurma.listTrail,
+            listStudent: minhaTurma.listStudent,
+        }));
+    }
+
     async getTodasMinhasTurmas(userId) {
         const todasTurmas = await this.classModel.find().exec();
 
@@ -60,6 +74,31 @@ export class TurmaService {
         }));
     }
 
+    async getTodasTurmasVinculadas(userId) {
+        const todasTurmas = await this.classModel.find().exec();
+        const numeroTodasTurmas = todasTurmas.length;
+        let minhasTurmas = [];
+        for(let i=0; i < numeroTodasTurmas; i++) {
+            let estudantes = todasTurmas[i].listStudent;
+            let quantEstudantes = estudantes.length;
+            for(let j=0; j < quantEstudantes; j++) {
+                if (userId == estudantes[j]) {
+                    minhasTurmas.push(todasTurmas[i]);
+                    break;
+                }
+            }
+        }
+        return minhasTurmas.map((minhaTurma) => ({
+            id: minhaTurma.id,
+            className: minhaTurma.className,
+            teacherId: minhaTurma.teacherId,
+            createdDate: minhaTurma.createdDate,
+            completionDate: minhaTurma.completionDate,
+            listTrail: minhaTurma.listTrail,
+            listStudent: minhaTurma.listStudent,
+        }));
+    }
+
     async getTurmaId(id: string): Promise<turmaType> {
         const turma = await this.encontrarTurma(id);
         return {
@@ -68,8 +107,15 @@ export class TurmaService {
             teacherId: turma.teacherId,
             createdDate: turma.createdDate,
             completionDate: turma.completionDate,
-            listTrail: turma.listTrail
+            listTrail: turma.listTrail,
+            listStudent: turma.listStudent
         };
+    }
+
+    async vincularAlunoTurma(id: string, userId) {
+        const updatedTurma = await this.encontrarTurma(id);
+        if(userId) {updatedTurma.listStudent.push(userId); }
+        updatedTurma.save();
     }
 
     async updateTurma(id: string, trailId) {
@@ -119,5 +165,18 @@ export class TurmaService {
 
     async deletarTurma(id: string) {
         await this.classModel.deleteOne({_id: id}).exec();
+    }
+
+    async desvincularAlunoTurma(turmaId: string, userId) {
+        const turma = await this.encontrarTurma(turmaId);
+        const listaAlunos = turma.listStudent;
+        const quantAlunos = listaAlunos.length;
+        for (let i=0; i < quantAlunos; i++) {
+            if (userId === listaAlunos[i]) {
+                const removendoAluno = listaAlunos.indexOf(userId);
+                listaAlunos.splice(removendoAluno, 1);
+            }
+        }
+        turma.save();
     }
 }
