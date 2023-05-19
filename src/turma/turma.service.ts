@@ -115,13 +115,13 @@ export class TurmaService {
     async vincularAlunoTurma(id: string, userId) {
         const updatedTurma = await this.encontrarTurma(id);
         if(userId) {updatedTurma.listStudent.push(userId); }
-        updatedTurma.save();
+        await updatedTurma.save();
     }
 
     async updateTurma(id: string, trailId) {
         const updatedTurma = await this.encontrarTurma(id);
         if(trailId) {updatedTurma.listTrail.push(trailId); }
-        updatedTurma.save();
+        await updatedTurma.save();
     }
 
     private async encontrarTurma(id: string): Promise<Class> {

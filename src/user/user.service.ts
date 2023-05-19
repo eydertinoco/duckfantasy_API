@@ -43,7 +43,6 @@ export class UserService {
     }
 
     async getById(id: string): Promise<userType> {
-        console.log(id);
         const user = await this.findUser(id);
         return {
             id: user.id,

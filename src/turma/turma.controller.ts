@@ -70,7 +70,7 @@ export class TurmaController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch('/:id/aluno/vincular')
+    @Patch(':id/aluno/vincular')
     async vincularTurma(
         @Param('id') turmaId: string,
         @Request() req: any,
