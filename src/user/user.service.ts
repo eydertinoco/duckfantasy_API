@@ -43,6 +43,7 @@ export class UserService {
     }
 
     async getById(id: string): Promise<userType> {
+        console.log(id);
         const user = await this.findUser(id);
         return {
             id: user.id,
@@ -55,17 +56,6 @@ export class UserService {
 
     async getByEmail(email: string) {
         const user = await this.userModel.findOne({ email: email }).exec();
-        return {
-            id: user.id,
-            email: user.email,
-            password: user.password,
-            name: user.name,
-            office: user.office
-        };
-    }
-
-    async getAllStudent() {
-        const user = await this.userModel.findOne({ office: 'Estudante' }).exec();
         return {
             id: user.id,
             email: user.email,
