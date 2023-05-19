@@ -30,17 +30,18 @@ export class ChapterController {
     @UseGuards(JwtAuthGuard)
     @Get(':id')
     async getChapterId(
-        @Param('id') id: string
+        @Param('id') id: string,
+        @Request() req: any,
     ) {
-        return this.chapterService.getChapterId(id);
+        return this.chapterService.getChapterId(id, req?.user.id);
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Get(':id')
-    async avaliarConteudo(
-        @Param('id') id: string
-    ) {
-        const infoCapitulo = this.chapterService.getChapterId(id);
-
-    }
+    // @UseGuards(JwtAuthGuard)
+    // @Patch(':id')
+    // async atualizarChapter(
+    //     @Param('id') id: string,
+    //     @Request() req: any,
+    // ) {
+    //     return this.chapterService.atualizarChapter(id, req?.user.id);
+    // }
 }

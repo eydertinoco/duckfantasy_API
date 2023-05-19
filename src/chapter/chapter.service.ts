@@ -13,7 +13,14 @@ export interface chapterType {
     chapterTitle: string,
     chapterText: string,
     trialId: string,
-    chapterRef: string
+    chapterRef: string,
+    notaAlunos: [
+        {
+            alunoId: string,
+            nota: boolean,
+            texto: string,
+        }
+    ]
 }
 
 @Injectable()
@@ -34,15 +41,48 @@ export class ChapterService {
         return result.id as string;
     }
 
-    async getChapterId(id: string): Promise<chapterType> {
-        const chapter = await this.encontrarCapitulo(id);
+    async getChapterId(chapterId: string, userId: string): Promise<chapterType> {
+        const chapter = await this.encontrarCapitulo(chapterId);
+        console.log(chapter);
+        const notaUsuario = await this.encontrarNotaUsuario(userId, chapter)
         return {
             id: chapter.id,
             chapterTitle: chapter.chapterTitle,
             chapterText: chapter.chapterText,
             trialId: chapter.trialId,
-            chapterRef: chapter.chapterRef
+            chapterRef: chapter.chapterRef,
+            notaAlunos: chapter.notaAlunos,
         };
+    }
+
+    // async atualizarChapter(chapterId: string, userId: string) {
+    //     const capituloAtualizado = await this.encontrarCapitulo(chapterId);
+    //     const notaUsuario = await this.encontrarNotaUsuario(userId, capituloAtualizado);
+    //     if (notaUsuario != null) {
+    //
+    //     }
+    //
+    //     if(notaUsuario) {capituloAtualizado.notaAlunos.push(notaUsuario); }
+    //
+    //     capituloAtualizado.save();
+    // }
+
+    private async encontrarNotaUsuario(userId: string, chapter: Chapter): Promise<{ alunoId: string; nota: boolean }> {
+        console.log('Estou procurando saber se o usuário deu Nota');
+        console.log(chapter);
+        const notaAlunos = chapter.notaAlunos;
+        console.log(notaAlunos);
+        const quantAlunos = notaAlunos.length;
+        console.log(quantAlunos);
+        let infoAluno = null;
+        for (let i=0; i < quantAlunos; i++) {
+            if (userId === notaAlunos[i].alunoId) {
+                infoAluno = notaAlunos[i];
+                console.log(infoAluno);
+                return infoAluno;
+            }
+        }
+        return infoAluno;
     }
 
     private async encontrarCapitulo(id: string): Promise<Chapter> {

@@ -4,6 +4,7 @@ export const ChapterSchema = new mongoose.Schema({
     chapterText: { type: String, required: true },
     trialId: { type: String, required: true },
     chapterRef: { type: String, required: false },
+    notaAlunos: { type: Array, required: false},
 });
 export interface Chapter extends mongoose.Document{
     id: string;
@@ -11,4 +12,11 @@ export interface Chapter extends mongoose.Document{
     chapterText: string;
     trialId: string;
     chapterRef: string;
+    notaAlunos: [
+        {
+            alunoId: string;
+            nota: boolean;
+            texto: string;
+        }
+    ]
 }
