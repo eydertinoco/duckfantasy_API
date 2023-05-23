@@ -4,7 +4,7 @@ import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {NewChapterDto} from "./dto/NewChapter.dto";
 import {TrailService} from "../trail/trail.service";
 
-@Controller('/trial/:id/chapter')
+@Controller('/chapter')
 export class ChapterController {
     constructor(
         private readonly chapterService: ChapterService,
@@ -36,12 +36,14 @@ export class ChapterController {
         return this.chapterService.getChapterId(id, req?.user.id);
     }
 
-    // @UseGuards(JwtAuthGuard)
-    // @Patch(':id')
-    // async atualizarChapter(
-    //     @Param('id') id: string,
-    //     @Request() req: any,
-    // ) {
-    //     return this.chapterService.atualizarChapter(id, req?.user.id);
-    // }
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/nota')
+    async atualizarChapter(
+        @Param('id') id: string,
+        @Body('nota') nota: boolean,
+        @Request() req: any,
+    ) {
+        await this.chapterService.notaAluno(id, nota, req?.user.id);
+        return null;
+    }
 }

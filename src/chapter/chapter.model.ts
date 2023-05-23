@@ -16,7 +16,6 @@ export interface Chapter extends mongoose.Document{
         {
             alunoId: string;
             nota: boolean;
-            texto: string;
         }
     ]
 }

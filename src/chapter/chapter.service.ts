@@ -18,7 +18,6 @@ export interface chapterType {
         {
             alunoId: string,
             nota: boolean,
-            texto: string,
         }
     ]
 }
@@ -55,30 +54,27 @@ export class ChapterService {
         };
     }
 
-    // async atualizarChapter(chapterId: string, userId: string) {
-    //     const capituloAtualizado = await this.encontrarCapitulo(chapterId);
-    //     const notaUsuario = await this.encontrarNotaUsuario(userId, capituloAtualizado);
-    //     if (notaUsuario != null) {
-    //
-    //     }
-    //
-    //     if(notaUsuario) {capituloAtualizado.notaAlunos.push(notaUsuario); }
-    //
-    //     capituloAtualizado.save();
-    // }
+    async notaAluno(chapterId: string, nota: boolean, alunoId: string) {
+        console.log('Chegando aqui');
+        const capituloAtualizado = await this.encontrarCapitulo(chapterId);
+        let notaUsuario = await this.encontrarNotaUsuario(alunoId, capituloAtualizado);
+        if (notaUsuario === null) {
+            capituloAtualizado.notaAlunos.push({alunoId, nota});
+            await capituloAtualizado.save();
+        } else {
+            // Editar nota anterior
+            capituloAtualizado.notaAlunos.push({alunoId, nota});
+            await capituloAtualizado.save();
+        }
+    }
 
     private async encontrarNotaUsuario(userId: string, chapter: Chapter): Promise<{ alunoId: string; nota: boolean }> {
-        console.log('Estou procurando saber se o usuário deu Nota');
-        console.log(chapter);
         const notaAlunos = chapter.notaAlunos;
-        console.log(notaAlunos);
         const quantAlunos = notaAlunos.length;
-        console.log(quantAlunos);
         let infoAluno = null;
         for (let i=0; i < quantAlunos; i++) {
             if (userId === notaAlunos[i].alunoId) {
                 infoAluno = notaAlunos[i];
-                console.log(infoAluno);
                 return infoAluno;
             }
         }
