@@ -20,10 +20,9 @@ export class TesteController {
         return { id: generatedId, status: 'Teste Cadastrada'};
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Get()
+    @Get('chapter/:id')
     async getTeste(
-        @Body('chapterId') chapterId: string,
+        @Param('id') chapterId: string
     ){
         const testes = await this.testeService.getAllTeste(chapterId);
         return testes;
