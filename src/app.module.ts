@@ -7,6 +7,7 @@ import { TurmaModule } from "./turma/turma.module";
 import { AuthModule } from './auth/auth.module';
 import { TrailModule } from "./trail/trail.module";
 import { ChapterModule } from "./chapter/chapter.module";
+import { TesteModule } from "./teste/teste.module";
 
 dotenv.config();
 const DB_USER = process.env.DB_USER;
@@ -21,6 +22,7 @@ const DB_PASSWORD = encodeURIComponent(process.env.DB_PASSWORD);
     TurmaModule,
     TrailModule,
     ChapterModule,
+    TesteModule,
     AuthModule
   ],
   controllers: [],
