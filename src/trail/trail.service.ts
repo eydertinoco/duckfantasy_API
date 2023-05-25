@@ -33,7 +33,6 @@ export class TrailService {
             teacherId: teacher,
             listChapter: []
         });
-        console.log(novaTrilha);
         const result = await novaTrilha.save();
         return result.id as string;
     }

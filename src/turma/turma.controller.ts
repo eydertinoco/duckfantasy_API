@@ -13,7 +13,6 @@ export class TurmaController {
         @Body() createTurmaDto: NewTurmaDto,
         @Request() req: any,
     ){
-        console.log(createTurmaDto);
         if (req?.user.office === "Professor") {
             const generatedId = await this.turmaService.criarNovaTurma(
                 req?.user.id,

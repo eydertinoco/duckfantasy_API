@@ -14,7 +14,6 @@ export class TrailController {
         @Body() createTrialDto: NewTrailDto,
         @Request() req: any,
     ){
-        console.log('Chegou aqui')
         const generatedId = await this.trailService.createTrail(
             req?.user.id,
             createTrialDto

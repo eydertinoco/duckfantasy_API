@@ -42,7 +42,6 @@ export class ChapterService {
 
     async getChapterId(chapterId: string, userId: string): Promise<chapterType> {
         const chapter = await this.encontrarCapitulo(chapterId);
-        console.log(chapter);
         const notaUsuario = await this.encontrarNotaUsuario(userId, chapter)
         return {
             id: chapter.id,
@@ -55,7 +54,6 @@ export class ChapterService {
     }
 
     async notaAluno(chapterId: string, nota: boolean, alunoId: string) {
-        console.log('Chegando aqui');
         const capituloAtualizado = await this.encontrarCapitulo(chapterId);
         let notaUsuario = await this.encontrarNotaUsuario(alunoId, capituloAtualizado);
         if (notaUsuario === null) {
